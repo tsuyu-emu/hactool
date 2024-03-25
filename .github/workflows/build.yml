@@ -33,7 +33,7 @@ jobs:
     - name: Install build dependencies
       if: matrix.job_name == 'linux'
       run: |
-        mv config mk.template config.mk
+        mv config.mk.template config.mk
         echo "Moved template to config.mk successfully"
         sudo apt-get update && sudo apt-get install -y gcc make
 
