@@ -31,7 +31,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Copy config.mk.template to config.mk
-      run: cp config.mk.template config.mk
+      run: mv config.mk.template config.mk
 
     - name: Install build dependencies
       if: matrix.job_name == 'linux'
@@ -48,7 +48,6 @@ jobs:
 
     - name: Build program
       run: 
-        cp config.mk.template config.mk
         make -j$(nproc)
 
     - name: Upload artifact
