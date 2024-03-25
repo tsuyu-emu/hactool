@@ -26,15 +26,11 @@ jobs:
 
     name: hactool-${{ matrix.job_name }}
     runs-on: ${{ matrix.os }}
-
+    
     steps:
-    - uses: actions/checkout@v2
-
     - name: Install build dependencies
       if: matrix.job_name == 'linux'
       run: |
-        mv config.mk.template config.mk
-        echo "Moved template to config.mk successfully"
         sudo apt-get update && sudo apt-get install -y gcc make
 
     - name: Install MSYS2 and packages
@@ -46,16 +42,9 @@ jobs:
         update: true
         install: mingw-w64-x86_64-gcc mingw-w64-x86_64-make
 
-    - name: Copy config.mk.template to config.mk
-      run: |
-        if [[ "${RUNNER_OS}" == "Windows" ]]; then
-          copy config.mk.template config.mk
-        else
-          cp config.mk.template config.mk
-        fi
-
     - name: Build program
-      run: 
+      run: |
+        mv config.mk.template config.mk
         make -j$(nproc)
 
     - name: Upload artifact
