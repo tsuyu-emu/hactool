@@ -28,21 +28,31 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: msys2/setup-msys2@v2
-      if: matrix.os == 'windows-latest'
+    - uses: actions/checkout@v2
+
+    - name: Copy config.mk.template to config.mk
+      run: cp config.mk.template config.mk
+
+    - name: Install build dependencies
+      if: matrix.job_name == 'linux'
+      run: sudo apt-get update && sudo apt-get install -y gcc make
+
+    - name: Install MSYS2 and packages
+      if: matrix.job_name == 'windows'
+      uses: msys2/setup-msys2@v2
       with:
         path-type: inherit
         msystem: MINGW64
         update: true
         install: mingw-w64-x86_64-gcc mingw-w64-x86_64-make
 
-    - uses: actions/checkout@v1
-
-    - run: |
-        mv config.mk.template config.mk
+    - name: Build program
+      run: 
+        cp config.mk.template config.mk
         make -j$(nproc)
 
-    - uses: actions/upload-artifact@v2
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
       with:
         name: hactool-${{ matrix.job_name }}
         path: hactool*
