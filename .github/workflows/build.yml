@@ -45,9 +45,14 @@ jobs:
         msystem: MINGW64
         update: true
         install: mingw-w64-x86_64-gcc mingw-w64-x86_64-make
-        run: |
-          move config.mk.template config.mk
-          echo "Moved template to config.mk successfully"
+
+    - name: Copy config.mk.template to config.mk
+      run: |
+        if [[ "${RUNNER_OS}" == "Windows" ]]; then
+          copy config.mk.template config.mk
+        else
+          cp config.mk.template config.mk
+        fi
 
     - name: Build program
       run: 
