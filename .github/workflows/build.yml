@@ -42,13 +42,13 @@ jobs:
         update: true
         install: mingw-w64-x86_64-gcc mingw-w64-x86_64-make
 
-    - name: Build program
-      run: |
+    - uses: actions/checkout@v1
+
+    - run: |
         mv config.mk.template config.mk
         make -j$(nproc)
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v2
       with:
         name: hactool-${{ matrix.job_name }}
         path: hactool*
